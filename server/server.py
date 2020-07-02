@@ -15,6 +15,7 @@ class ReportReceiver:
         self.filename = filename
         self.filepath = filepath
         
+    #Check existence of log file and then write to it
     def commitToFile(self, message):
         location = self.filepath + self.filename
         if not os.path.exists(location):
@@ -24,6 +25,8 @@ class ReportReceiver:
         file.write(message)
         file.close()
         
+    #Main routine. Listens for incoming connections, and ends when connection
+    # is severed from the other end
     def listen(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.bind((self.hostname, self.port))
@@ -33,6 +36,8 @@ class ReportReceiver:
             fullMessage = ''
             newMessage = True
             while True:
+                #Chunk the message into 128 byte segments to not take up too
+                #much memory with the buffer
                 message = connection.recv(128)
                 if newMessage:
                     try:

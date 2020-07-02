@@ -18,6 +18,8 @@ class ClientReport:
         self.port = port
         self.headerSize = 10
         
+    
+    #Function to create socket and establish connection
     def createSocket(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -39,19 +41,26 @@ class ClientReport:
         return reportString
     
     def sendReport(self):
+        #generate report string
         report = self.generateReport()
+        #attach header
         report = f"{len(report):<{self.headerSize}}" + report
         if not hasattr(self, 'socket'):
             self.createSocket()
+        #send report
         self.socket.send(bytes(report, "utf-8"))
         return None
         
     def report(self):
+        #start a timer to execute the next report in 5 seconds
         self.thread = threading.Timer(5, self.report)
         self.thread.start()
+        #send report now
         self.sendReport()
+        #return to kill threading
         return None
         
+    #tear down functionality
     def close(self):
         if hasattr(self, "thread"):
             self.thread.cancel()
