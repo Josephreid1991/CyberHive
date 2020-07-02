@@ -19,6 +19,7 @@ class TestClient(unittest.TestCase):
         self.testSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.testSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.testSocket.bind((self.localhost, self.port))
+        self.testSocket.settimeout(1)
     
     def tearDown(self):
         self.testSocket.close()
@@ -39,7 +40,6 @@ class TestClient(unittest.TestCase):
             break
         
     def testMessageContainsInfo(self):
-        self.testSocket.settimeout(1)
         self.testSocket.listen()
         self.testReporter.sendReport()
         while True:
