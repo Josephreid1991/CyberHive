@@ -1,0 +1,17 @@
+- hosts: server
+  tasks:
+    - name: copy python to server
+      copy:
+        src: ./server/server.py ./server/serverRun.py
+        dest: /root/
+    - name: start listening service
+      command: python3 /root/serverRun.py & > listeningService.log
+
+-hosts: client
+ tasks:
+   - name: copy python to client
+     copy:
+       src: ./client/client.py ./client/clientRun.py
+       dest: /root/
+   - name: start reporting service
+     command: python3 /root/clientRun.py & > reportingService.log
